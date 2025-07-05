@@ -1,0 +1,22 @@
+name: PR Auto Labeler
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label PR by branch prefix
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            ${{
+              github.head_ref.startsWith('feat/') && 'feature' ||
+              github.head_ref.startsWith('fix/') && 'bug' ||
+              github.head_ref == 'docs' && 'documentation' ||
+              github.head_ref == 'dev' && 'development' ||
+              github.head_ref == 'main' && 'release'
+            }}
