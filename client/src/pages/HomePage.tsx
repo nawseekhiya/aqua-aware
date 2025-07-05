@@ -4,8 +4,13 @@ import { ArrowDown } from "lucide-react";
 const HomePage = () => {
   return (
     <div className="relative">
-      {/* Hero Section with Particles */}
+      {/* Hero Section */}
       <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          Video placeholder
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-black/50"></div>
+        </div>
 
         {/* Content */}
         <div className="container mx-auto px-6 text-center relative z-10">
