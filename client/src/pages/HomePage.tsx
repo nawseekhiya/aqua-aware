@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="relative">
       Home Page (WIP)
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;
