@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Filter, Trash2, Factory, Droplets } from "lucide-react";
+import Card from "../components/ui/Card";
 
 const categories = [
   { id: "all", name: "All Sources" },
@@ -108,9 +109,9 @@ const getCategoryIcon = (category: string) => {
 
 const SourcesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedDialogCategory, setSelectedDialogCategory] = useState<
-    string | null
-  >(null);
+  // const [selectedDialogCategory, setSelectedDialogCategory] = useState<
+  //   string | null
+  // >(null);
 
   const filteredSources =
     selectedCategory === "all"
@@ -159,9 +160,16 @@ const SourcesPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="cursor-pointer"
-              onClick={() => setSelectedDialogCategory(source.category)}
+              // onClick={() => setSelectedDialogCategory(source.category)}
             >
-              Card Content
+              <Card
+                title={source.title}
+                description={source.description}
+                image={source.image}
+                icon={getCategoryIcon(source.category)}
+                isFlippable={false} // Disable flipping
+                // onClick={() => setSelectedDialogCategory(source.category)}
+              />
             </motion.div>
           ))}
         </div>
@@ -174,7 +182,7 @@ const SourcesPage = () => {
               <div
                 key={category.id}
                 className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-                onClick={() => setSelectedDialogCategory(category.id)}
+                // onClick={() => setSelectedDialogCategory(category.id)}
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className={`w-4 h-4 rounded-full ${category.color}`} />
