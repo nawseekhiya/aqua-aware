@@ -5,9 +5,23 @@ import {
   AlertCircle,
   AlertCircle as CircleAlert,
   ThermometerSnowflake,
-  X
+  X // Import X icon for clear button
 } from "lucide-react";
 import PollutionCard from "../components/ui/PollutionCard";
+import PollutantDialog from "../components/ui/PollutantDialog"; // Add dialog import
+
+interface Pollutant {
+  id: number;
+  name: string;
+  description: string;
+  safeLimit: string;
+  currentLevel: number;
+  maxSafe: number;
+  impact: string;
+  sources: string[];
+  category: string;
+  color: string;
+}
 
 const pollutants = [
   {
@@ -164,6 +178,7 @@ const getCategoryIcon = (category: string) => {
 const PollutantsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedPollutant, setSelectedPollutant] = useState<Pollutant | null>(null);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -255,6 +270,8 @@ const PollutantsPage = () => {
             filteredPollutants.map((pollutant) => (
               <div 
                 key={pollutant.id}
+                onClick={() => setSelectedPollutant(pollutant)}
+                className="cursor-pointer"
               >
                 <PollutionCard
                   title={pollutant.name}
@@ -288,7 +305,12 @@ const PollutantsPage = () => {
             </div>
           )}
         </div>
-
+        
+        {/* Pollutant Dialog */}
+        <PollutantDialog 
+          pollutant={selectedPollutant} 
+          onClose={() => setSelectedPollutant(null)} 
+        />
       </div>
     </div>
   );
