@@ -5,7 +5,9 @@ import {
   AlertCircle,
   AlertCircle as CircleAlert,
   ThermometerSnowflake,
+  X
 } from "lucide-react";
+import PollutionCard from "../components/ui/PollutionCard";
 
 const pollutants = [
   {
@@ -167,6 +169,10 @@ const PollutantsPage = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
+
   const handleCategoryFilter = (category: string) => {
     setSelectedCategory(category === selectedCategory ? null : category);
   };
@@ -207,9 +213,19 @@ const PollutantsPage = () => {
                 placeholder="Search pollutants..."
                 value={searchTerm}
                 onChange={handleSearch}
-                className="w-full px-4 py-3 pl-12 rounded-xl bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                className="w-full px-4 py-3 pl-12 pr-10 rounded-xl bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              
+              {searchTerm && (
+                <button
+                  onClick={handleClearSearch}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors duration-200"
+                  aria-label="Clear search"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -237,13 +253,20 @@ const PollutantsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredPollutants.length > 0 ? (
             filteredPollutants.map((pollutant) => (
-              <div key={pollutant.id} className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className={`w-4 h-4 rounded-full ${pollutant.color}`} />
-                  <h3 className="text-xl font-semibold">{pollutant.name}</h3>
-                </div>
-                <p className="text-gray-600 dark:text-gray-400">{pollutant.description}</p>
-                {getCategoryIcon(pollutant.category)}
+              <div 
+                key={pollutant.id}
+              >
+                <PollutionCard
+                  title={pollutant.name}
+                  description={pollutant.description}
+                  icon={getCategoryIcon(pollutant.category)}
+                  color={pollutant.color}
+                  currentLevel={pollutant.currentLevel}
+                  maxSafe={pollutant.maxSafe}
+                  safeLimit={pollutant.safeLimit}
+                  impact={pollutant.impact}
+                  sources={pollutant.sources}
+                />
               </div>
             ))
           ) : (
@@ -265,6 +288,7 @@ const PollutantsPage = () => {
             </div>
           )}
         </div>
+
       </div>
     </div>
   );
