@@ -1,4 +1,5 @@
 import { ArrowDown, Droplet, AlertTriangle, Activity } from "lucide-react";
+import StatCard from "../components/ui/StatCard";
 
 const HomePage = () => {
   return (
@@ -46,7 +47,38 @@ const HomePage = () => {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            StatCard grid placeholder
+            <StatCard
+              title="Affected Rivers"
+              value={275}
+              unit="rivers"
+              description="Rivers in India classified as severely polluted"
+              icon={<Droplet className="h-6 w-6" />}
+              accentColor="from-blue-600 to-blue-400"
+            />
+            <StatCard
+              title="Population Impact"
+              value={600}
+              unit="million"
+              description="People facing high to extreme water stress"
+              icon={<Activity className="h-6 w-6" />}
+              accentColor="from-orange-500 to-orange-300"
+            />
+            <StatCard
+              title="Health Issues"
+              value={38}
+              unit="%"
+              description="Of all diseases in India are water-related"
+              icon={<AlertTriangle className="h-6 w-6" />}
+              accentColor="from-red-500 to-red-300"
+            />
+            <StatCard
+              title="Water Treatment"
+              value={37}
+              unit="%"
+              description="Of urban sewage receives proper treatment"
+              icon={<Droplet className="h-6 w-6" />}
+              accentColor="from-green-500 to-green-300"
+            />
           </div>
         </div>
       </section>
