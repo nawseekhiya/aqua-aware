@@ -1,5 +1,6 @@
 import { ArrowDown, Droplet, AlertTriangle, Activity } from "lucide-react";
 import StatCard from "../components/ui/StatCard";
+import WaterQualityChecker from "../components/ui/WaterQualityChecker";
 
 const HomePage = () => {
   return (
@@ -170,7 +171,7 @@ const HomePage = () => {
           </h2>
 
           <div className="max-w-lg mx-auto">
-            CityQualityChecker placeholder
+            <WaterQualityChecker />
           </div>
 
           <div className="mt-12 text-center">
