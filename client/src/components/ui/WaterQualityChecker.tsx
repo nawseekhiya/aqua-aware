@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, type SetStateAction } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { parse } from 'papaparse';
-// import WaterQualityDetailsDialog from './WaterQualityDetailsDialog';
+import WaterQualityDetailsDialog from './WaterQualityDetailsDialog';
 
 interface WaterQualityData {
   city: string;
@@ -332,12 +332,12 @@ const WaterQualityChecker = () => {
         )}
       </div>
 
-      {/* {selectedCityDetails && (
+      {selectedCityDetails && (
         <WaterQualityDetailsDialog
           city={selectedCityDetails}
           onClose={() => setSelectedCityDetails(null)}
         />
-      )} */}
+      )}
     </div>
   );
 };
