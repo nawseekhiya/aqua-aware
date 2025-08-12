@@ -2,21 +2,21 @@ import { useState } from 'react';
 import TimelineItem from '../components/ui/TimelineItem'; // Adjust the import path as needed
 
 // Replace these with actual image imports
-// const yapHead = './src/assets/yap-head.jpg';
-// const yapBefore = './src/assets/yap-before.jpg';
-// const yapAfter = './src/assets/yap-after.jpg';
-// const sabarmatiHead = './src/assets/sabarmati-head.jpg';
-// const sabarmatiBefore = './src/assets/sabarmati-before.jpg';
-// const sabarmatiAfter = './src/assets/sabarmati-after.jpg';
-// const noyyalHead = './src/assets/noyyal-head.jpg';
-// const noyyalBefore = './src/assets/noyyal-before.jpg';
-// const noyyalAfter = './src/assets/noyyal-after.jpg';
-// const hussainSagarHead = './src/assets/hussainsagar-head.jpg';
-// const hussainSagarBefore = './src/assets/hussainsagar-before.jpg';
-// const hussainSagarAfter = './src/assets/hussainsagar-after.jpg';
-// const cooumHead = './src/assets/cooum-head.jpg';
-// const cooumBefore = './src/assets/cooum-before.jpg';
-// const cooumAfter = './src/assets/cooum-after.jpg';
+const yapHead = './src/assets/yap-head.jpg';
+const yapBefore = './src/assets/yap-before.jpg';
+const yapAfter = './src/assets/yap-after.jpg';
+const sabarmatiHead = './src/assets/sabarmati-head.jpg';
+const sabarmatiBefore = './src/assets/sabarmati-before.jpg';
+const sabarmatiAfter = './src/assets/sabarmati-after.jpg';
+const noyyalHead = './src/assets/noyyal-head.jpg';
+const noyyalBefore = './src/assets/noyyal-before.jpg';
+const noyyalAfter = './src/assets/noyyal-after.jpg';
+const hussainSagarHead = './src/assets/hussainsagar-head.jpg';
+const hussainSagarBefore = './src/assets/hussainsagar-before.jpg';
+const hussainSagarAfter = './src/assets/hussainsagar-after.jpg';
+const cooumHead = './src/assets/cooum-head.jpg';
+const cooumBefore = './src/assets/cooum-before.jpg';
+const cooumAfter = './src/assets/cooum-after.jpg';
 
 const successStories = [
   {
@@ -32,9 +32,9 @@ const successStories = [
     ],
     impact: 'The BOD levels have decreased by 34% in selected stretches, with notable improvements in dissolved oxygen levels.',
     challenges: 'Continued population growth and urbanization present ongoing challenges.',
-    // image: yapHead,
-    // beforeImage: yapBefore,
-    // afterImage: yapAfter,
+    image: yapHead,
+    beforeImage: yapBefore,
+    afterImage: yapAfter,
   },
   {
     id: 2,
@@ -49,9 +49,9 @@ const successStories = [
     ],
     impact: 'Water quality improved from Class E to Class C. The riverfront now serves as a model for urban river restoration projects.',
     challenges: 'Maintaining water flow during dry seasons remains a challenge.',
-    // image: sabarmatiHead,
-    // beforeImage: sabarmatiBefore,
-    // afterImage: sabarmatiAfter,
+    image: sabarmatiHead,
+    beforeImage: sabarmatiBefore,
+    afterImage: sabarmatiAfter,
   },
   {
     id: 3,
@@ -66,9 +66,9 @@ const successStories = [
     ],
     impact: 'Significant reduction in TDS levels from 10,000 mg/L to below 2,100 mg/L. Groundwater quality in adjacent areas has improved.',
     challenges: 'Economic impacts on local textile industry required balancing with environmental goals.',
-    // image: noyyalHead,
-    // beforeImage: noyyalBefore,
-    // afterImage: noyyalAfter,
+    image: noyyalHead,
+    beforeImage: noyyalBefore,
+    afterImage: noyyalAfter,
   },
   {
     id: 4,
@@ -83,9 +83,9 @@ const successStories = [
     ],
     impact: 'BOD levels reduced from 28 mg/L to 8 mg/L. Dissolved oxygen levels increased from 0.8 mg/L to 4.2 mg/L.',
     challenges: 'Religious practices involving idol immersion require ongoing management solutions.',
-    // image: hussainSagarHead,
-    // beforeImage: hussainSagarBefore,
-    // afterImage: hussainSagarAfter,
+    image: hussainSagarHead,
+    beforeImage: hussainSagarBefore,
+    afterImage: hussainSagarAfter,
   },
   {
     id: 5,
@@ -100,9 +100,9 @@ const successStories = [
     ],
     impact: 'Reduction in fecal coliform count from millions to thousands CFU/100ml in treated stretches. Return of several fish species.',
     challenges: 'Encroachments and continued sewage inflow from unsewered areas present ongoing challenges.',
-    // image: cooumHead,
-    // beforeImage: cooumBefore,
-    // afterImage: cooumAfter,
+    image: cooumHead,
+    beforeImage: cooumBefore,
+    afterImage: cooumAfter,
   },
 ];
 
