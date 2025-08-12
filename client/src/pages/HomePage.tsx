@@ -1,6 +1,7 @@
 import { ArrowDown, Droplet, AlertTriangle, Activity } from "lucide-react";
 import StatCard from "../components/ui/StatCard";
 import WaterQualityChecker from "../components/ui/WaterQualityChecker";
+import heroBg from "../assets/hero-bg.mp4";
 
 const HomePage = () => {
   return (
@@ -8,7 +9,16 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0 overflow-hidden">
-          Video Placeholder
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-90"
+          >
+            <source src={heroBg} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
           {/* Dark overlay */}
           <div className="absolute inset-0 bg-black/50"></div>
         </div>
