@@ -1,7 +1,8 @@
 import { ArrowDown, Droplet, AlertTriangle, Activity } from "lucide-react";
 import StatCard from "../components/ui/StatCard";
 import WaterQualityChecker from "../components/ui/WaterQualityChecker";
-import heroBg from "../assets/hero-bg.mp4";
+
+const heroBg = "/hero-bg.mp4";
 
 const HomePage = () => {
   return (

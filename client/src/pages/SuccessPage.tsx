@@ -1,22 +1,22 @@
 import { useState } from 'react';
-import TimelineItem from '../components/ui/TimelineItem'; // Adjust the import path as needed
+import TimelineItem from '../components/ui/TimelineItem';
 
-// Replace these with actual image imports
-const yapHead = './src/assets/yap-head.jpg';
-const yapBefore = './src/assets/yap-before.jpg';
-const yapAfter = './src/assets/yap-after.jpg';
-const sabarmatiHead = './src/assets/sabarmati-head.jpg';
-const sabarmatiBefore = './src/assets/sabarmati-before.jpg';
-const sabarmatiAfter = './src/assets/sabarmati-after.jpg';
-const noyyalHead = './src/assets/noyyal-head.jpg';
-const noyyalBefore = './src/assets/noyyal-before.jpg';
-const noyyalAfter = './src/assets/noyyal-after.jpg';
-const hussainSagarHead = './src/assets/hussainsagar-head.jpg';
-const hussainSagarBefore = './src/assets/hussainsagar-before.jpg';
-const hussainSagarAfter = './src/assets/hussainsagar-after.jpg';
-const cooumHead = './src/assets/cooum-head.jpg';
-const cooumBefore = './src/assets/cooum-before.jpg';
-const cooumAfter = './src/assets/cooum-after.jpg';
+// Public paths (images placed in the project's public/ folder)
+const yapHead = '/yap-head.jpg';
+const yapBefore = '/yap-before.jpg';
+const yapAfter = '/yap-after.jpg';
+const sabarmatiHead = '/sabarmati-head.jpg';
+const sabarmatiBefore = '/sabarmati-before.jpg';
+const sabarmatiAfter = '/sabarmati-after.jpg';
+const noyyalHead = '/noyyal-head.jpg';
+const noyyalBefore = '/noyyal-before.jpg';
+const noyyalAfter = '/noyyal-after.jpg';
+const hussainSagarHead = '/hussainsagar-head.jpg';
+const hussainSagarBefore = '/hussainsagar-before.jpg';
+const hussainSagarAfter = '/hussainsagar-after.jpg';
+const cooumHead = '/cooum-head.jpg';
+const cooumBefore = '/cooum-before.jpg';
+const cooumAfter = '/cooum-after.jpg';
 
 const successStories = [
   {
