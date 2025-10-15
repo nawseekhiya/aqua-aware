@@ -7,7 +7,7 @@ const HomePage = () => {
   return (
     <div className="relative">
       {/* Hero Section */}
-      <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[110vh] -mt-[72px] pt-[72px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0 overflow-hidden">
           <video
             autoPlay
@@ -20,7 +20,7 @@ const HomePage = () => {
             Your browser does not support the video tag.
           </video>
           {/* Dark overlay */}
-          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 bg-gray-900/50"></div>
         </div>
 
         {/* Content */}
@@ -37,7 +37,11 @@ const HomePage = () => {
             onClick={() => {
               const statsSection = document.getElementById("stats-section");
               if (statsSection) {
-                statsSection.scrollIntoView({ behavior: "smooth" });
+                const y =
+                  statsSection.getBoundingClientRect().top +
+                  window.scrollY -
+                  72;
+                window.scrollTo({ top: y, behavior: "smooth" });
               }
             }}
           >
