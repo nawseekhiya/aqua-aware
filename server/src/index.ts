@@ -2,12 +2,16 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import supabase from './lib/supabase';
+import waterQualityRouter from './routes/waterQuality';
 
 dotenv.config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// mount router
+app.use('/api/v1', waterQualityRouter);
 
 app.get("/", (req, res) => {
   res.send("AquaAware backend is running 🌊");
