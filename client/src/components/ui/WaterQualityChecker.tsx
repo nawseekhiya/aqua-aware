@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import WaterQualityDetailsDialog from "./WaterQualityDetailsDialog";
+import Loader from "./Loader";
 
 interface WaterQualityData {
   city: string;
@@ -14,13 +15,35 @@ const WaterQualityChecker = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState("");
   const [cityData, setCityData] = useState<WaterQualityData | null>(null);
+  // `isLoading` is used for fetching a selected city's full data.
+  // Use a separate `summariesLoading` flag for the initial list fetch so
+  // the small in-component spinner only appears when the user requests
+  // a city's data.
   const [isLoading, setIsLoading] = useState(false);
+  const [summariesLoading, setSummariesLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [processedData, setProcessedData] = useState<WaterQualityData[]>([]);
   const [selectedCityDetails, setSelectedCityDetails] = useState<string | null>(
     null
   );
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const API_BASE =
+    (import.meta.env.VITE_API_BASE as string) || "http://localhost:3000";
+
+  const fetchSummaries = async () => {
+    setSummariesLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/v1/water-quality`);
+      if (!res.ok) throw new Error(`Failed to fetch summaries: ${res.status}`);
+      const data: WaterQualityData[] = await res.json();
+      setProcessedData(data);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
+    } finally {
+      setSummariesLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Fetch city summaries from server on mount
@@ -35,46 +58,69 @@ const WaterQualityChecker = () => {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const API_BASE =
-    (import.meta.env.VITE_API_BASE as string) || "http://localhost:3000";
-
-  const fetchSummaries = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/water-quality`);
-      if (!res.ok) throw new Error(`Failed to fetch summaries: ${res.status}`);
-      const data: WaterQualityData[] = await res.json();
-      setProcessedData(data);
-    } catch (err: any) {
-      setError(err?.message ?? String(err));
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const handleCitySelect = (city: string) => {
+  const handleCitySelect = async (city: string) => {
     setSelectedCity(city);
     setIsOpen(false);
     setIsLoading(true);
     setError(null);
-    // We already have summaries from the server; find the selected city's summary and show it.
-    const data = processedData.find((item) => item.city === city);
-    if (data) {
-      setCityData(data);
+
+    try {
+      // Fetch the city summary from the server so the spinner shows during a real network request
+      const res = await fetch(
+        `${API_BASE}/api/v1/water-quality/${encodeURIComponent(city)}`
+      );
+      if (!res.ok)
+        throw new Error(`Failed to fetch city summary: ${res.status}`);
+      const json = await res.json();
+      // API returns { summary, measurements } — use summary if available
+      const summary = json.summary || json;
+      if (summary) {
+        // normalize shape to WaterQualityData
+        const rawPollutants =
+          summary.main_pollutants ?? summary.mainPollutants ?? [];
+        let mainPollutants: string[] = [];
+        if (Array.isArray(rawPollutants)) {
+          mainPollutants = rawPollutants as string[];
+        } else if (typeof rawPollutants === "string") {
+          // try JSON parse (some APIs store arrays as JSON strings), otherwise split by comma
+          try {
+            const parsed = JSON.parse(rawPollutants);
+            if (Array.isArray(parsed)) mainPollutants = parsed.map(String);
+            else mainPollutants = [String(parsed)];
+          } catch {
+            mainPollutants = rawPollutants
+              .split(",")
+              .map((s: string) => s.trim())
+              .filter(Boolean);
+          }
+        }
+
+        const mapped: WaterQualityData = {
+          city: summary.city || city,
+          quality: (summary.quality as WaterQualityData["quality"]) || "Fair",
+          qualityScore: Number(
+            summary.qualityScore ?? summary.quality_score ?? 0
+          ),
+          lastUpdated:
+            summary.lastUpdated ||
+            summary.last_updated ||
+            new Date().toISOString(),
+          mainPollutants,
+        };
+        setCityData(mapped);
+      } else {
+        setError("No data available for selected city");
+      }
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage);
+    } finally {
       setIsLoading(false);
-    } else {
-      // Unexpected: try refetching summaries once
-      fetchSummaries()
-        .then(() => {
-          const refetched = processedData.find((p) => p.city === city);
-          if (refetched) setCityData(refetched);
-          else setError("No data available for selected city");
-          setIsLoading(false);
-        })
-        .catch(() => setIsLoading(false));
     }
   };
 
@@ -106,9 +152,14 @@ const WaterQualityChecker = () => {
           <button
             type="button"
             onClick={toggleDropdown}
+            aria-busy={summariesLoading ? "true" : "false"}
+            disabled={summariesLoading}
             className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-left flex items-center justify-between text-black dark:text-white transition-all duration-300 hover:border-blue-400 dark:hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-30"
           >
-            <span>{selectedCity || "Select a city"}</span>
+            <span>
+              {selectedCity ||
+                (summariesLoading ? "Loading cities..." : "Select a city")}
+            </span>
             <ChevronDown
               className={`h-5 w-5 transition-transform duration-300 ${
                 isOpen ? "rotate-180" : ""
@@ -136,9 +187,8 @@ const WaterQualityChecker = () => {
         </div>
 
         {isLoading && (
-          <div className="flex justify-center items-center py-8">
-            <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          </div>
+          // use compact Loader component for the inline spinner
+          <Loader compact={true} />
         )}
 
         {error && (

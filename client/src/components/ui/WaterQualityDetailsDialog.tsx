@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+import { useLoading } from "../../contexts/LoadingContext";
+import Skeleton from "./Skeleton";
 
 interface WaterQualityDetailsDialogProps {
   city: string;
@@ -64,7 +66,7 @@ const WaterQualityDetailsDialog = ({
   onClose,
 }: WaterQualityDetailsDialogProps) => {
   const [parameters, setParameters] = useState<ParameterData[]>([]);
-  const [isLoadingDetails, setIsLoadingDetails] = useState<boolean>(false);
+  const { startLoading, stopLoading, loading } = useLoading();
   const getParameterDetails = (
     code: string,
     value: number,
@@ -114,7 +116,7 @@ const WaterQualityDetailsDialog = ({
       (import.meta.env.VITE_API_BASE as string) || "http://localhost:3000";
 
     const fetchDetails = async () => {
-      setIsLoadingDetails(true);
+      startLoading({ overlay: false });
       setParameters([]);
       try {
         const res = await fetch(
@@ -123,14 +125,20 @@ const WaterQualityDetailsDialog = ({
         if (!res.ok)
           throw new Error(`Failed to fetch city details: ${res.status}`);
         const json = await res.json();
-        const measurements: any[] = json.measurements || [];
+        const measurements: Array<{
+          parameter_code?: string;
+          parameterCode?: string;
+          parameter?: string;
+          value: number;
+          unit: string;
+          sample_date?: string;
+          sampleDate?: string;
+          sampleDateString?: string;
+        }> = json.measurements || [];
 
         const parameterMap: { [key: string]: ParameterData } = {};
         measurements.forEach((m) => {
-          const code =
-            m.parameter_code ||
-            (m as any).parameterCode ||
-            (m as any).parameter;
+          const code = m.parameter_code || m.parameterCode || m.parameter;
           if (!code) return;
           const value = Number(m.value);
           const unit = m.unit || "";
@@ -148,15 +156,15 @@ const WaterQualityDetailsDialog = ({
         });
 
         setParameters(Object.values(parameterMap));
-      } catch (err) {
+      } catch {
         setParameters([]);
       } finally {
-        setIsLoadingDetails(false);
+        stopLoading({ overlay: false });
       }
     };
 
     fetchDetails();
-  }, [city]);
+  }, [city, startLoading, stopLoading]);
 
   return (
     <AnimatePresence>
@@ -166,6 +174,7 @@ const WaterQualityDetailsDialog = ({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+        onClick={() => onClose()}
       >
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
@@ -173,6 +182,7 @@ const WaterQualityDetailsDialog = ({
           exit={{ scale: 0.95, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
           className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="p-6">
             <div className="flex justify-between items-center mb-6">
@@ -199,18 +209,14 @@ const WaterQualityDetailsDialog = ({
               transition={{ delay: 0.1 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
-              {isLoadingDetails ? (
+              {loading ? (
                 Array.from({ length: 6 }).map((_, i) => (
                   <motion.div
                     key={`skeleton-${i}`}
                     initial={{ scale: 0.9 }}
                     animate={{ scale: 1 }}
-                    className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl animate-pulse"
                   >
-                    <div className="h-5 bg-gray-200 dark:bg-gray-600 rounded w-3/4 mb-3" />
-                    <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/4 mb-4" />
-                    <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full mb-2" />
-                    <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full w-5/6" />
+                    <Skeleton variant="card" />
                   </motion.div>
                 ))
               ) : parameters.length ? (
