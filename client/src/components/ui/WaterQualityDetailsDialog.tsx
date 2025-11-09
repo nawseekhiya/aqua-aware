@@ -64,6 +64,7 @@ const WaterQualityDetailsDialog = ({
   onClose,
 }: WaterQualityDetailsDialogProps) => {
   const [parameters, setParameters] = useState<ParameterData[]>([]);
+  const [isLoadingDetails, setIsLoadingDetails] = useState<boolean>(false);
   const getParameterDetails = (
     code: string,
     value: number,
@@ -113,6 +114,8 @@ const WaterQualityDetailsDialog = ({
       (import.meta.env.VITE_API_BASE as string) || "http://localhost:3000";
 
     const fetchDetails = async () => {
+      setIsLoadingDetails(true);
+      setParameters([]);
       try {
         const res = await fetch(
           `${API_BASE}/api/v1/water-quality/${encodeURIComponent(city)}`
@@ -147,6 +150,8 @@ const WaterQualityDetailsDialog = ({
         setParameters(Object.values(parameterMap));
       } catch (err) {
         setParameters([]);
+      } finally {
+        setIsLoadingDetails(false);
       }
     };
 
@@ -194,52 +199,70 @@ const WaterQualityDetailsDialog = ({
               transition={{ delay: 0.1 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
-              {parameters.map((param) => (
-                <motion.div
-                  key={param.name}
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl"
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="font-semibold text-gray-800 dark:text-white">
-                        {param.name}
-                      </h3>
-                      {param.type && (
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          {param.type}
-                        </p>
-                      )}
+              {isLoadingDetails ? (
+                Array.from({ length: 6 }).map((_, i) => (
+                  <motion.div
+                    key={`skeleton-${i}`}
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl animate-pulse"
+                  >
+                    <div className="h-5 bg-gray-200 dark:bg-gray-600 rounded w-3/4 mb-3" />
+                    <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/4 mb-4" />
+                    <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full mb-2" />
+                    <div className="h-2 bg-gray-200 dark:bg-gray-600 rounded-full w-5/6" />
+                  </motion.div>
+                ))
+              ) : parameters.length ? (
+                parameters.map((param) => (
+                  <motion.div
+                    key={param.name}
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl"
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="font-semibold text-gray-800 dark:text-white">
+                          {param.name}
+                        </h3>
+                        {param.type && (
+                          <p className="text-sm text-gray-600 dark:text-gray-300">
+                            {param.type}
+                          </p>
+                        )}
+                      </div>
+                      <span className="text-lg font-bold text-gray-800 dark:text-white">
+                        {param.value.toFixed(2)}{" "}
+                        {param.name === "pH Level" ? "" : param.unit}
+                      </span>
                     </div>
-                    <span className="text-lg font-bold text-gray-800 dark:text-white">
-                      {param.value.toFixed(2)}{" "}
-                      {param.name === "pH Level" ? "" : param.unit}
-                    </span>
-                  </div>
 
-                  <div className="relative h-2 bg-gray-200 dark:bg-gray-600 rounded-full">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${calculateBarWidth(param)}%` }}
-                      transition={{ duration: 0.5 }}
-                      className={`absolute left-0 top-0 h-full rounded-full ${getBarColor(
-                        param
-                      )}`}
-                    />
-                  </div>
+                    <div className="relative h-2 bg-gray-200 dark:bg-gray-600 rounded-full">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${calculateBarWidth(param)}%` }}
+                        transition={{ duration: 0.5 }}
+                        className={`absolute left-0 top-0 h-full rounded-full ${getBarColor(
+                          param
+                        )}`}
+                      />
+                    </div>
 
-                  <div className="mt-3 flex justify-between text-sm">
-                    <span className="text-gray-600 dark:text-gray-300">
-                      Safe range: {param.safeRange}
-                    </span>
-                    <span className="text-gray-500 dark:text-gray-400">
-                      {new Date(param.date).toLocaleDateString()}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="mt-3 flex justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-300">
+                        Safe range: {param.safeRange}
+                      </span>
+                      <span className="text-gray-500 dark:text-gray-400">
+                        {new Date(param.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="text-gray-600 dark:text-gray-300">
+                  No measurements found.
+                </div>
+              )}
             </motion.div>
           </div>
         </motion.div>
