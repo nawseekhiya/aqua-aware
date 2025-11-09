@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Skeleton from "./Skeleton";
 
 interface CardProps {
   title: string;
@@ -22,6 +23,44 @@ const Card = ({
   onClick,
 }: CardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+
+  // Preload the image and keep the skeleton visible until the image is
+  // fully loaded (or fails). This uses a JS Image() preloader to
+  // reliably detect both cached and network loads, and falls back to
+  // the DOM <img> events as a backup.
+  useEffect(() => {
+    let cancelled = false;
+    setIsImageLoading(true);
+
+    if (!image) {
+      setIsImageLoading(false);
+      return;
+    }
+
+    const pre = new Image();
+
+    const finish = () => {
+      if (!cancelled) setIsImageLoading(false);
+    };
+
+    pre.onload = finish;
+    pre.onerror = finish;
+
+    // Assign src after handlers so we don't miss synchronous loads.
+    pre.src = image;
+
+    // If already complete (cached), call finish synchronously.
+    if (pre.complete && pre.naturalWidth) {
+      finish();
+    }
+
+    return () => {
+      cancelled = true;
+      pre.onload = null;
+      pre.onerror = null;
+    };
+  }, [image]);
 
   const handleFlip = () => {
     if (isFlippable) {
@@ -67,11 +106,19 @@ const Card = ({
           } ${isFlipped && isFlippable ? "opacity-0" : "opacity-100"}`}
         >
           {image && (
-            <div className="h-40 overflow-hidden">
+            <div className="h-40 overflow-hidden relative">
+              {isImageLoading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Skeleton variant="image" />
+                </div>
+              )}
               <img
                 src={image}
                 alt={title}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                className={`w-full h-full object-cover transition-opacity duration-300 ${
+                  isImageLoading ? "opacity-0" : "opacity-100"
+                } hover:scale-105 transform`}
+                loading="lazy"
               />
             </div>
           )}
