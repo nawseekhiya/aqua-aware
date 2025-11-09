@@ -177,12 +177,20 @@ export default function TreatmentPanel({
                 </span>
                 {activeTab === "diy" && (
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
-                    {(selectedTreatmentData as any).difficulty} Difficulty
+                    {
+                      (selectedTreatmentData as { difficulty?: string })
+                        .difficulty
+                    }{" "}
+                    Difficulty
                   </span>
                 )}
                 {activeTab === "lab" && (
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                    {(selectedTreatmentData as any).efficiency} Efficiency
+                    {
+                      (selectedTreatmentData as { efficiency?: string })
+                        .efficiency
+                    }{" "}
+                    Efficiency
                   </span>
                 )}
               </div>
@@ -230,9 +238,10 @@ export default function TreatmentPanel({
                 </h3>
                 <ol className="space-y-3">
                   {(activeTab === "diy"
-                    ? (selectedTreatmentData as any).instructions
-                    : (selectedTreatmentData as any).process
-                  ).map((step: string, index: number) => (
+                    ? (selectedTreatmentData as { instructions?: string[] })
+                        .instructions
+                    : (selectedTreatmentData as { process?: string[] }).process
+                  )?.map((step: string, index: number) => (
                     <li key={index} className="flex items-start">
                       <span className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
                         {index + 1}

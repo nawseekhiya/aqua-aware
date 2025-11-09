@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import ProgressBar from './ProgressBar';
+import React from "react";
+import { motion } from "framer-motion";
+import ProgressBar from "./ProgressBar";
 
 interface PollutionCardProps {
   title: string;
@@ -11,8 +11,6 @@ interface PollutionCardProps {
   currentLevel: number;
   maxSafe: number;
   safeLimit: string;
-  impact: string;
-  sources: string[];
 }
 
 const PollutionCard = ({
@@ -24,15 +22,22 @@ const PollutionCard = ({
   currentLevel,
   maxSafe,
   safeLimit,
-  impact,
-  sources
 }: PollutionCardProps) => {
-  const getProgressColor = () => {
+  const getProgressColor = ():
+    | "red"
+    | "yellow"
+    | "blue"
+    | "green"
+    | "default" => {
     switch (color) {
-      case 'red': return 'red';
-      case 'yellow': return 'yellow';
-      case 'orange': return 'orange';
-      default: return 'blue';
+      case "red":
+        return "red";
+      case "yellow":
+        return "yellow";
+      case "orange":
+        return "red"; // map orange to red for ProgressBar
+      default:
+        return "blue";
     }
   };
 
@@ -46,14 +51,14 @@ const PollutionCard = ({
       <div className="h-full flex flex-col">
         {image && (
           <div className="h-40 overflow-hidden bg-gray-100 dark:bg-gray-800">
-            <img 
-              src={image} 
-              alt={title} 
+            <img
+              src={image}
+              alt={title}
               className="w-full h-full object-cover"
             />
           </div>
         )}
-        
+
         <div className="p-6 flex-1 flex flex-col">
           <div className="mb-4">{icon}</div>
           <h3 className="text-xl font-semibold text-black dark:text-white mb-2">
@@ -62,7 +67,7 @@ const PollutionCard = ({
           <p className="text-gray-600 dark:text-gray-400 mb-4 flex-1">
             {description}
           </p>
-          
+
           {/* Always-visible Progress Bar */}
           <ProgressBar
             value={currentLevel}

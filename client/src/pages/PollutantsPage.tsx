@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import {
   Search,
   AlertCircle,
   AlertCircle as CircleAlert,
   ThermometerSnowflake,
-  X // Import X icon for clear button
+  X, // Import X icon for clear button
 } from "lucide-react";
 import PollutionCard from "../components/ui/PollutionCard";
 import PollutantDialog from "../components/ui/PollutantDialog"; // Add dialog import
@@ -178,7 +177,9 @@ const getCategoryIcon = (category: string) => {
 const PollutantsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedPollutant, setSelectedPollutant] = useState<Pollutant | null>(null);
+  const [selectedPollutant, setSelectedPollutant] = useState<Pollutant | null>(
+    null
+  );
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -231,7 +232,7 @@ const PollutantsPage = () => {
                 className="w-full px-4 py-3 pl-12 pr-10 rounded-xl bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              
+
               {searchTerm && (
                 <button
                   onClick={handleClearSearch}
@@ -268,7 +269,7 @@ const PollutantsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredPollutants.length > 0 ? (
             filteredPollutants.map((pollutant) => (
-              <div 
+              <div
                 key={pollutant.id}
                 onClick={() => setSelectedPollutant(pollutant)}
                 className="cursor-pointer"
@@ -281,8 +282,6 @@ const PollutantsPage = () => {
                   currentLevel={pollutant.currentLevel}
                   maxSafe={pollutant.maxSafe}
                   safeLimit={pollutant.safeLimit}
-                  impact={pollutant.impact}
-                  sources={pollutant.sources}
                 />
               </div>
             ))
@@ -305,11 +304,11 @@ const PollutantsPage = () => {
             </div>
           )}
         </div>
-        
+
         {/* Pollutant Dialog */}
-        <PollutantDialog 
-          pollutant={selectedPollutant} 
-          onClose={() => setSelectedPollutant(null)} 
+        <PollutantDialog
+          pollutant={selectedPollutant}
+          onClose={() => setSelectedPollutant(null)}
         />
       </div>
     </div>
